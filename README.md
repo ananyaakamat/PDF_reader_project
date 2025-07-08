@@ -1,49 +1,59 @@
 # PDF Reader MCP Server
 
-A Model Context Protocol (MCP) server that provides PDF text extraction and metadata extraction capabilities for AI assistants like Claude Desktop.
+A Model Context Protocol (MCP) server that provides PDF processing capabilities for AI assistants. This server allows you to extract text content and metadata from PDF files through a standardized interface.
 
 ## 🚀 Features
 
 - **PDF Text Extraction**: Extract full text content from PDF files
-- **PDF Metadata Extraction**: Get document properties including title, author, creation date, page count, and more
-- **Type-Safe Implementation**: Built with TypeScript for robust type checking
-- **Error Handling**: Comprehensive error handling and input validation
-- **Security**: File path validation to prevent directory traversal attacks
+- **PDF Metadata Extraction**: Get document properties, author, title, creation date, page count, and more
+- **Robust Error Handling**: Comprehensive error handling with detailed error messages
+- **Security**: Input validation and file path sanitization to prevent security issues
+- **Type Safety**: Full TypeScript implementation with proper type definitions
 
-## 📋 Prerequisites
+## � Installation
 
-- Node.js (v14 or higher)
+### Prerequisites
+
+- Node.js (v16 or higher)
 - npm or yarn package manager
-- Claude Desktop or compatible MCP client
 
-## 🛠️ Installation
+### Setup
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/anantvardhan04/PDF_reader_project.git
-   cd PDF_reader_project
+   git clone https://github.com/ananyaakamat/PDF_reader_project.git
+   cd PDF_reader_project/MCP_Servers/pdf_reader
    ```
 
-2. **Navigate to the MCP server directory**:
-   ```bash
-   cd MCP_Servers/pdf_reader
-   ```
-
-3. **Install dependencies**:
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-4. **Build the TypeScript code**:
+3. **Build the project**:
    ```bash
    npm run build
    ```
 
-## ⚙️ Configuration
+## 🛠️ Usage
 
-### Claude Desktop Configuration
+### Running the Server
 
-Add the following configuration to your Claude Desktop settings file (`settings.json`):
+To start the MCP server:
+
+```bash
+npm start
+```
+
+Or run directly with Node.js:
+
+```bash
+node index.js
+```
+
+### Configuration in Claude Desktop
+
+Add the following configuration to your Claude Desktop MCP settings:
 
 ```json
 {
