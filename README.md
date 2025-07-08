@@ -10,7 +10,7 @@ A Model Context Protocol (MCP) server that provides PDF processing capabilities 
 - **Security**: Input validation and file path sanitization to prevent security issues
 - **Type Safety**: Full TypeScript implementation with proper type definitions
 
-## � Installation
+## 📦 Installation
 
 ### Prerequisites
 
@@ -62,7 +62,7 @@ Add the following configuration to your Claude Desktop MCP settings:
       "pdf-reader": {
         "command": "node",
         "args": [
-          "path/to/PDF_reader_project/MCP_Servers/pdf_reader/index.js"
+          "path/to/your/PDF_reader_project/MCP_Servers/pdf_reader/index.js"
         ]
       }
     }
@@ -70,60 +70,84 @@ Add the following configuration to your Claude Desktop MCP settings:
 }
 ```
 
-Replace `path/to/` with the actual path to your project directory.
+Replace `path/to/your/` with the actual path to your project directory.
 
-### Example Configuration (Windows)
-```json
-{
-  "mcp": {
-    "servers": {
-      "pdf-reader": {
-        "command": "node",
-        "args": [
-          "d:\\Anant\\VSCodeProjects\\PDF_reader_project\\MCP_Servers\\pdf_reader\\index.js"
-        ]
-      }
-    }
-  }
-}
-```
+## 🔧 Available Tools
 
-## 🔧 Usage
+### 1. extract_pdf_text
 
-### Available Tools
-
-#### 1. Extract PDF Text
-Extracts the full text content from a PDF file.
+Extracts all text content from a PDF file.
 
 **Parameters:**
-- `filePath` (string): Path to the PDF file to extract text from
+- `filePath` (string): Path to the PDF file
 
 **Example:**
-```
-Extract text from: /path/to/document.pdf
+```json
+{
+  "name": "extract_pdf_text",
+  "arguments": {
+    "filePath": "./documents/sample.pdf"
+  }
+}
 ```
 
-#### 2. Extract PDF Metadata
+**Response:**
+```json
+{
+  "success": true,
+  "filePath": "./documents/sample.pdf",
+  "text": "Extracted text content...",
+  "pageCount": 5,
+  "extractedAt": "2025-07-08T10:30:00.000Z"
+}
+```
+
+### 2. extract_pdf_metadata
+
 Extracts metadata and document properties from a PDF file.
 
 **Parameters:**
-- `filePath` (string): Path to the PDF file to extract metadata from
-
-**Returns:**
-- Title
-- Author
-- Subject
-- Creator
-- Producer
-- Creation Date
-- Modification Date
-- Page Count
-- PDF Version
+- `filePath` (string): Path to the PDF file
 
 **Example:**
+```json
+{
+  "name": "extract_pdf_metadata",
+  "arguments": {
+    "filePath": "./documents/sample.pdf"
+  }
+}
 ```
-Extract metadata from: /path/to/document.pdf
+
+**Response:**
+```json
+{
+  "success": true,
+  "filePath": "./documents/sample.pdf",
+  "metadata": {
+    "pageCount": 5,
+    "pdfVersion": "1.4",
+    "hasAcroForm": false,
+    "hasXFA": false,
+    "title": "Sample Document",
+    "author": "John Doe",
+    "subject": "Example PDF",
+    "keywords": "sample, test, pdf",
+    "creator": "Microsoft Word",
+    "producer": "PDF Creator",
+    "creationDate": "2025-01-01T00:00:00.000Z",
+    "modificationDate": "2025-07-08T10:00:00.000Z"
+  },
+  "extractedAt": "2025-07-08T10:30:00.000Z"
+}
 ```
+
+## 🛡️ Security Features
+
+- **Path Validation**: Prevents directory traversal attacks
+- **File Extension Validation**: Only accepts `.pdf` files
+- **Access Control**: Checks file permissions before processing
+- **Input Sanitization**: Validates all input parameters using Zod schemas
 
 ## 🏗️ Project Structure
 
@@ -133,69 +157,83 @@ PDF_reader_project/
 │   └── pdf_reader/
 │       ├── src/
 │       │   └── server.ts          # Main server implementation
+│       ├── index.js               # Compiled JavaScript output
 │       ├── package.json           # Dependencies and scripts
 │       ├── tsconfig.json          # TypeScript configuration
-│       └── index.js              # Compiled output (entry point)
-├── docs/                         # Comprehensive documentation
+│       └── node_modules/          # Dependencies
+├── docs/                          # Documentation
 │   ├── setup-guide.md
 │   ├── python-best-practices.md
-│   ├── html-js-css-best-practices.md
-│   ├── playwright-testing-best-practices.md
-│   ├── unit-testing-best-practices.md
-│   ├── mcp-server-security-evaluator-best-practices.md
-│   ├── prd-best-practices.md
-│   └── commit-style.md
-└── README.md                    # This file
+│   └── ...
+└── README.md                      # This file
 ```
 
 ## 🔧 Development
 
-### Building the Project
-```bash
-npm run build
-```
+### Building from Source
 
-### Running in Development Mode
-```bash
-npm start
-```
+1. **Install TypeScript globally** (if not already installed):
+   ```bash
+   npm install -g typescript
+   ```
 
-### Dependencies
+2. **Compile TypeScript**:
+   ```bash
+   npm run build
+   ```
 
-**Core Dependencies:**
-- `@modelcontextprotocol/sdk`: MCP protocol implementation
-- `pdf-parse`: PDF parsing and text extraction
+3. **Run in development mode**:
+   ```bash
+   npm run dev
+   ```
+
+### Available Scripts
+
+- `npm run build`: Compile TypeScript to JavaScript
+- `npm start`: Start the MCP server
+- `npm run dev`: Run in development mode with auto-restart
+
+## 📚 Dependencies
+
+### Production Dependencies
+- `@modelcontextprotocol/sdk`: MCP SDK for server implementation
+- `pdf-parse`: PDF parsing library
 - `zod`: Runtime type validation
-- `express`: Web server framework
 
-**Development Dependencies:**
+### Development Dependencies
 - `typescript`: TypeScript compiler
 - `@types/node`: Node.js type definitions
 
-## 📚 Documentation
+## 🐛 Troubleshooting
 
-The `docs/` folder contains comprehensive guides for:
-- Project setup and configuration
-- Best practices for various technologies
-- Testing strategies and implementation
-- Security guidelines
-- Product requirement documentation
-- Commit style standards
+### Common Issues
 
-## 🔒 Security Features
+1. **"File not found" error**:
+   - Ensure the PDF file exists at the specified path
+   - Check file permissions
+   - Use absolute paths when in doubt
 
-- **Input Validation**: All file paths are validated using Zod schemas
-- **Path Sanitization**: Prevents directory traversal attacks
-- **Error Handling**: Comprehensive error handling without exposing sensitive information
-- **Type Safety**: TypeScript ensures type safety throughout the application
+2. **"Permission denied" error**:
+   - Verify read permissions for the PDF file
+   - Check if the file is open in another application
+
+3. **"Invalid file path" error**:
+   - Ensure the file has a `.pdf` extension
+   - Check for directory traversal attempts in the path
+
+### Error Codes
+
+- `InvalidParams`: Invalid input parameters or file issues
+- `InternalError`: Server-side processing errors
+- `MethodNotFound`: Unknown tool requested
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Commit changes: `git commit -am 'Add your feature'`
+4. Push to the branch: `git push origin feature/your-feature`
+5. Submit a pull request
 
 ## 📝 License
 
@@ -203,25 +241,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [Model Context Protocol](https://github.com/modelcontextprotocol) for the MCP SDK
-- [pdf-parse](https://github.com/modesty/pdf-parse) for PDF processing capabilities
-- [Zod](https://github.com/colinhacks/zod) for runtime type validation
+- [Model Context Protocol](https://modelcontextprotocol.io/) for the MCP specification
+- [pdf-parse](https://www.npmjs.com/package/pdf-parse) for PDF processing capabilities
+- [Zod](https://zod.dev/) for runtime type validation
 
 ## 📞 Support
 
 If you encounter any issues or have questions:
-1. Check the documentation in the `docs/` folder
-2. Create an issue in the GitHub repository
-3. Refer to the MCP documentation for protocol-specific questions
 
-## 🎯 Roadmap
-
-- [ ] Add support for password-protected PDFs
-- [ ] Implement OCR for scanned PDFs
-- [ ] Add batch processing capabilities
-- [ ] Support for additional document formats
-- [ ] Enhanced metadata extraction features
+1. Check the [troubleshooting section](#troubleshooting)
+2. Review the [documentation](./docs/)
+3. Open an issue on GitHub
 
 ---
 
-**Created with ❤️ for the MCP ecosystem**
+Made with ❤️ for the MCP community
