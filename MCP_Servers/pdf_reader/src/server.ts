@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ErrorCode,
   ListToolsRequestSchema,
   McpError,
-} from '@modelcontextprotocol/sdk/types.js';
-import fs from 'fs/promises';
-import path from 'path';
-import { z } from 'zod';
+} from "@modelcontextprotocol/sdk/types.js";
+import fs from "fs/promises";
+import path from "path";
+import { z } from "zod";
 
 // Import pdf-parse with proper typing
-const pdfParse = require('pdf-parse');
+const pdfParse = require("pdf-parse");
 
 // Define Zod schemas for input validation
 const ExtractTextSchema = z.object({
@@ -52,8 +52,8 @@ class PDFReaderServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'pdf-reader',
-        version: '1.0.0',
+        name: "pdf-reader",
+        version: "1.0.0",
       },
       {
         capabilities: {
@@ -63,10 +63,10 @@ class PDFReaderServer {
     );
 
     this.setupToolHandlers();
-    
+
     // Error handling
-    this.server.onerror = (error) => console.error('[MCP Error]', error);
-    process.on('SIGINT', async () => {
+    this.server.onerror = (error) => console.error("[MCP Error]", error);
+    process.on("SIGINT", async () => {
       await this.server.close();
       process.exit(0);
     });
@@ -78,31 +78,31 @@ class PDFReaderServer {
       return {
         tools: [
           {
-            name: 'extract_pdf_text',
-            description: 'Extract text content from a PDF file',
+            name: "extract_pdf_text",
+            description: "Extract text content from a PDF file",
             inputSchema: {
-              type: 'object',
+              type: "object",
               properties: {
                 filePath: {
-                  type: 'string',
-                  description: 'Path to the PDF file to extract text from',
+                  type: "string",
+                  description: "Path to the PDF file to extract text from",
                 },
               },
-              required: ['filePath'],
+              required: ["filePath"],
             },
           },
           {
-            name: 'extract_pdf_metadata',
-            description: 'Extract metadata information from a PDF file',
+            name: "extract_pdf_metadata",
+            description: "Extract metadata information from a PDF file",
             inputSchema: {
-              type: 'object',
+              type: "object",
               properties: {
                 filePath: {
-                  type: 'string',
-                  description: 'Path to the PDF file to extract metadata from',
+                  type: "string",
+                  description: "Path to the PDF file to extract metadata from",
                 },
               },
-              required: ['filePath'],
+              required: ["filePath"],
             },
           },
         ],
@@ -115,9 +115,9 @@ class PDFReaderServer {
 
       try {
         switch (name) {
-          case 'extract_pdf_text':
+          case "extract_pdf_text":
             return await this.extractPDFText(args);
-          case 'extract_pdf_metadata':
+          case "extract_pdf_metadata":
             return await this.extractPDFMetadata(args);
           default:
             throw new McpError(
@@ -129,8 +129,9 @@ class PDFReaderServer {
         if (error instanceof McpError) {
           throw error;
         }
-        
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error occurred";
         throw new McpError(
           ErrorCode.InternalError,
           `Error executing tool ${name}: ${errorMessage}`
@@ -153,21 +154,21 @@ class PDFReaderServer {
     try {
       // Validate file path and prevent directory traversal
       const normalizedPath = path.resolve(filePath);
-      if (!normalizedPath.startsWith(path.resolve('.')) && !path.isAbsolute(filePath)) {
-        throw new McpError(
-          ErrorCode.InvalidParams,
-          'Invalid file path'
-        );
+      if (
+        !normalizedPath.startsWith(path.resolve(".")) &&
+        !path.isAbsolute(filePath)
+      ) {
+        throw new McpError(ErrorCode.InvalidParams, "Invalid file path");
       }
 
       // Check if file exists and is accessible
       await fs.access(normalizedPath, fs.constants.F_OK | fs.constants.R_OK);
 
       // Check if file has PDF extension
-      if (!normalizedPath.toLowerCase().endsWith('.pdf')) {
+      if (!normalizedPath.toLowerCase().endsWith(".pdf")) {
         throw new McpError(
           ErrorCode.InvalidParams,
-          'File must have a .pdf extension'
+          "File must have a .pdf extension"
         );
       }
 
@@ -178,14 +179,18 @@ class PDFReaderServer {
       return {
         content: [
           {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              filePath: filePath,
-              text: data.text,
-              pageCount: data.numpages,
-              extractedAt: new Date().toISOString(),
-            }, null, 2),
+            type: "text",
+            text: JSON.stringify(
+              {
+                success: true,
+                filePath: filePath,
+                text: data.text,
+                pageCount: data.numpages,
+                extractedAt: new Date().toISOString(),
+              },
+              null,
+              2
+            ),
           },
         ],
       };
@@ -195,13 +200,13 @@ class PDFReaderServer {
       }
 
       if (error instanceof Error) {
-        if (error.message.includes('ENOENT')) {
+        if (error.message.includes("ENOENT")) {
           throw new McpError(
             ErrorCode.InvalidParams,
             `File not found: ${filePath}`
           );
         }
-        if (error.message.includes('EACCES')) {
+        if (error.message.includes("EACCES")) {
           throw new McpError(
             ErrorCode.InvalidParams,
             `Permission denied: ${filePath}`
@@ -211,7 +216,9 @@ class PDFReaderServer {
 
       throw new McpError(
         ErrorCode.InternalError,
-        `Failed to extract text from PDF: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to extract text from PDF: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
       );
     }
   }
@@ -230,21 +237,21 @@ class PDFReaderServer {
     try {
       // Validate file path and prevent directory traversal
       const normalizedPath = path.resolve(filePath);
-      if (!normalizedPath.startsWith(path.resolve('.')) && !path.isAbsolute(filePath)) {
-        throw new McpError(
-          ErrorCode.InvalidParams,
-          'Invalid file path'
-        );
+      if (
+        !normalizedPath.startsWith(path.resolve(".")) &&
+        !path.isAbsolute(filePath)
+      ) {
+        throw new McpError(ErrorCode.InvalidParams, "Invalid file path");
       }
 
       // Check if file exists and is accessible
       await fs.access(normalizedPath, fs.constants.F_OK | fs.constants.R_OK);
 
       // Check if file has PDF extension
-      if (!normalizedPath.toLowerCase().endsWith('.pdf')) {
+      if (!normalizedPath.toLowerCase().endsWith(".pdf")) {
         throw new McpError(
           ErrorCode.InvalidParams,
-          'File must have a .pdf extension'
+          "File must have a .pdf extension"
         );
       }
 
@@ -255,26 +262,30 @@ class PDFReaderServer {
       return {
         content: [
           {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              filePath: filePath,
-              metadata: {
-                pageCount: data.numpages,
-                pdfVersion: data.info.PDFFormatVersion,
-                hasAcroForm: data.info.IsAcroFormPresent,
-                hasXFA: data.info.IsXFAPresent,
-                title: data.info.Title || null,
-                author: data.info.Author || null,
-                subject: data.info.Subject || null,
-                keywords: data.info.Keywords || null,
-                creator: data.info.Creator || null,
-                producer: data.info.Producer || null,
-                creationDate: data.info.CreationDate?.toISOString() || null,
-                modificationDate: data.info.ModDate?.toISOString() || null,
+            type: "text",
+            text: JSON.stringify(
+              {
+                success: true,
+                filePath: filePath,
+                metadata: {
+                  pageCount: data.numpages,
+                  pdfVersion: data.info.PDFFormatVersion,
+                  hasAcroForm: data.info.IsAcroFormPresent,
+                  hasXFA: data.info.IsXFAPresent,
+                  title: data.info.Title || null,
+                  author: data.info.Author || null,
+                  subject: data.info.Subject || null,
+                  keywords: data.info.Keywords || null,
+                  creator: data.info.Creator || null,
+                  producer: data.info.Producer || null,
+                  creationDate: data.info.CreationDate?.toISOString() || null,
+                  modificationDate: data.info.ModDate?.toISOString() || null,
+                },
+                extractedAt: new Date().toISOString(),
               },
-              extractedAt: new Date().toISOString(),
-            }, null, 2),
+              null,
+              2
+            ),
           },
         ],
       };
@@ -284,13 +295,13 @@ class PDFReaderServer {
       }
 
       if (error instanceof Error) {
-        if (error.message.includes('ENOENT')) {
+        if (error.message.includes("ENOENT")) {
           throw new McpError(
             ErrorCode.InvalidParams,
             `File not found: ${filePath}`
           );
         }
-        if (error.message.includes('EACCES')) {
+        if (error.message.includes("EACCES")) {
           throw new McpError(
             ErrorCode.InvalidParams,
             `Permission denied: ${filePath}`
@@ -300,7 +311,9 @@ class PDFReaderServer {
 
       throw new McpError(
         ErrorCode.InternalError,
-        `Failed to extract metadata from PDF: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Failed to extract metadata from PDF: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
       );
     }
   }
@@ -308,7 +321,7 @@ class PDFReaderServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('PDF Reader MCP server running on stdio');
+    console.error("PDF Reader MCP server running on stdio");
   }
 }
 

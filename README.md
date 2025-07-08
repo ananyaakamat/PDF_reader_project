@@ -20,12 +20,14 @@ A Model Context Protocol (MCP) server that provides PDF processing capabilities 
 ### Setup
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/ananyaakamat/PDF_reader_project.git
    cd PDF_reader_project/MCP_Servers/pdf_reader
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
@@ -79,9 +81,11 @@ Replace `path/to/your/` with the actual path to your project directory.
 Extracts all text content from a PDF file.
 
 **Parameters:**
+
 - `filePath` (string): Path to the PDF file
 
 **Example:**
+
 ```json
 {
   "name": "extract_pdf_text",
@@ -92,6 +96,7 @@ Extracts all text content from a PDF file.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -107,9 +112,11 @@ Extracts all text content from a PDF file.
 Extracts metadata and document properties from a PDF file.
 
 **Parameters:**
+
 - `filePath` (string): Path to the PDF file
 
 **Example:**
+
 ```json
 {
   "name": "extract_pdf_metadata",
@@ -120,6 +127,7 @@ Extracts metadata and document properties from a PDF file.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -173,11 +181,13 @@ PDF_reader_project/
 ### Building from Source
 
 1. **Install TypeScript globally** (if not already installed):
+
    ```bash
    npm install -g typescript
    ```
 
 2. **Compile TypeScript**:
+
    ```bash
    npm run build
    ```
@@ -196,11 +206,13 @@ PDF_reader_project/
 ## 📚 Dependencies
 
 ### Production Dependencies
+
 - `@modelcontextprotocol/sdk`: MCP SDK for server implementation
 - `pdf-parse`: PDF parsing library
 - `zod`: Runtime type validation
 
 ### Development Dependencies
+
 - `typescript`: TypeScript compiler
 - `@types/node`: Node.js type definitions
 
@@ -209,11 +221,13 @@ PDF_reader_project/
 ### Common Issues
 
 1. **"File not found" error**:
+
    - Ensure the PDF file exists at the specified path
    - Check file permissions
    - Use absolute paths when in doubt
 
 2. **"Permission denied" error**:
+
    - Verify read permissions for the PDF file
    - Check if the file is open in another application
 
