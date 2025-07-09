@@ -74,6 +74,45 @@ Add the following configuration to your Claude Desktop MCP settings:
 
 Replace `path/to/your/` with the actual path to your project directory.
 
+### Configuration in VS Code
+
+For quick installation, use one of the one-click install buttons below:
+
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=pdf-reader&config=%7B%22command%22%3A%22node%22%2C%22args%22%3A%5B%22PATH_TO_YOUR_PROJECT/PDF_reader_project/MCP_Servers/pdf_reader/index.js%22%5D%7D) [![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=pdf-reader&config=%7B%22command%22%3A%22node%22%2C%22args%22%3A%5B%22PATH_TO_YOUR_PROJECT/PDF_reader_project/MCP_Servers/pdf_reader/index.js%22%5D%7D&quality=insiders)
+
+> **Note**: Replace `PATH_TO_YOUR_PROJECT` with the actual path to your cloned repository.
+
+For manual installation, add the following JSON block to your User Settings (JSON) file in VS Code. You can do this by pressing `Ctrl + Shift + P` and typing `Preferences: Open User Settings (JSON)`.
+
+Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace. This will allow you to share the configuration with others.
+
+> Note that the `mcp` key is needed when using the `mcp.json` file.
+
+Add to your VS Code `settings.json`:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "pdf-reader": {
+        "command": "node",
+        "args": [
+          "path/to/your/PDF_reader_project/MCP_Servers/pdf_reader/index.js"
+        ]
+      }
+    }
+  }
+}
+```
+
+**Settings File Locations:**
+
+- **Windows**: `%APPDATA%\Code\User\settings.json`
+- **macOS**: `~/Library/Application Support/Code/User/settings.json`
+- **Linux**: `~/.config/Code/User/settings.json`
+
+> **Note**: Ensure you have the MCP extension installed in VS Code for MCP server support.
+
 ## 🔧 Available Tools
 
 ### 1. extract_pdf_text
